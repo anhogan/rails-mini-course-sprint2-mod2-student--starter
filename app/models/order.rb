@@ -1,25 +1,14 @@
 class Order < ApplicationRecord
   def products
-    product_ids = OrderProduct.where(order_id: params[:order_id]).pluck(:product_id)
-    @products = Product.find(product_ids)
-
-    return @products
+    product_ids = OrderProduct.where(order_id: id).pluck(:product_id)
+    Product.find(product_ids)
   end
 
   def shippable?
-    if params[:status] != "shipped" && products?
-      shippable = true
-    else
-      shippable = false
-    end
+    status != "shipped" && products.count >= 1
   end
 
   def ship
-    if shippable?
-      @order.update(status: "shipped")
-      return true
-    else
-      return false
-    end
+    shippable? && update(status: "shipped")
   end
 end

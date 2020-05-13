@@ -1,7 +1,7 @@
 class OrderProcessor
   def initialize(order)
     @order = order
-    @product = @order.products
+    @product = order.products
   end
 
   def ship
@@ -15,9 +15,6 @@ class OrderProcessor
 
   private
   def products_available?
-    inventory = @product.select { |item| item.inventory > 0 }
-
-    if inventory.length == @product.length
-      return inventory
+    @products.all? { |product| product.available? }
   end
 end
