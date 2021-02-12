@@ -29,11 +29,12 @@ module Api
 
       def ship
         @order = Order.find(params[:id])
+        @order_processor = OrderProcessor.new(@order)
 
-        if @order.update(status: "shipped")
+        if @order_processor.ship
           render json: @order, status: :ok, location: api_v1_order_url(@order)
         else
-          render json: @order.errors, status: :unprocessable_entity
+          render json: { message: "There was a problem shipping your order." }, status: :unprocessable_entity
         end
       end
     end
